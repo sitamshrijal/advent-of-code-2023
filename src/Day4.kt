@@ -5,7 +5,17 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        val scratchcards = input.map { Scratchcard.parse(it) }
+
+        val counts = MutableList(scratchcards.size) { 1 }
+
+        scratchcards.forEachIndexed { index, scratchcard ->
+            val count = scratchcard.numbers.count { it in scratchcard.winningNumbers }
+            repeat(count) {
+                counts[index + it + 1] += counts[index]
+            }
+        }
+        return counts.sum()
     }
 
     val input = readInput("input4")
