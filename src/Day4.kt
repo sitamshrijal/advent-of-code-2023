@@ -1,3 +1,5 @@
+import kotlin.math.pow
+
 fun main() {
     fun part1(input: List<String>): Int {
         val scratchcards = input.map { Scratchcard.parse(it) }
@@ -10,8 +12,7 @@ fun main() {
         val counts = MutableList(scratchcards.size) { 1 }
 
         scratchcards.forEachIndexed { index, scratchcard ->
-            val count = scratchcard.numbers.count { it in scratchcard.winningNumbers }
-            repeat(count) {
+            repeat(scratchcard.score) {
                 counts[index + it + 1] += counts[index]
             }
         }
@@ -23,7 +24,10 @@ fun main() {
     part2(input).println()
 }
 
-data class Scratchcard(val winningNumbers: List<Int>, val numbers: List<Int>) {
+/**
+ * A Scratchcard with the [score] of our numbers matching with the winning numbers.
+ */
+data class Scratchcard(val score: Int) {
     companion object {
         private val regex = """\s+""".toRegex()
 
@@ -33,21 +37,10 @@ data class Scratchcard(val winningNumbers: List<Int>, val numbers: List<Int>) {
 
             val list2 = input.substringAfter("|").trim()
             val numbers = list2.split(regex).map { it.toInt() }
-            return Scratchcard(winningNumbers, numbers)
+            val score = numbers.count { it in winningNumbers }
+            return Scratchcard(score)
         }
     }
 
-    fun points(): Int {
-        var points = 0
-        for (number in numbers) {
-            if (number in winningNumbers) {
-                if (points == 0) {
-                    points += 1
-                } else {
-                    points *= 2
-                }
-            }
-        }
-        return points
-    }
+    fun points(): Int = 2.0.pow(score - 1).toInt()
 }
