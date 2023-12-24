@@ -46,15 +46,14 @@ data class Hand(val cards: String, val bid: Int) : Comparable<Hand> {
 
     private fun getType(): HandType {
         val groups = cards.groupingBy { it }.eachCount()
-        val size = groups.size
         return when {
-            size == 5 -> HandType.HIGH_CARD
-            size == 4 && groups.containsValue(2) -> HandType.ONE_PAIR
-            size == 3 && groups.containsValue(2) -> HandType.TWO_PAIR
-            size == 3 && groups.containsValue(3) -> HandType.THREE_OF_A_KIND
-            size == 2 && groups.containsValue(3) -> HandType.FULL_HOUSE
-            size == 2 && groups.containsValue(4) -> HandType.FOUR_OF_A_KIND
-            size == 1 -> HandType.FIVE_OF_A_KIND
+            groups.size == 5 -> HandType.HIGH_CARD
+            groups.size == 4 && groups.containsValue(2) -> HandType.ONE_PAIR
+            groups.size == 3 && groups.containsValue(2) -> HandType.TWO_PAIR
+            groups.size == 3 && groups.containsValue(3) -> HandType.THREE_OF_A_KIND
+            groups.size == 2 && groups.containsValue(3) -> HandType.FULL_HOUSE
+            groups.size == 2 && groups.containsValue(4) -> HandType.FOUR_OF_A_KIND
+            groups.size == 1 -> HandType.FIVE_OF_A_KIND
             else -> error("Invalid hand!")
         }
     }
