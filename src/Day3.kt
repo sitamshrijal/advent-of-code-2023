@@ -11,11 +11,8 @@ fun main() {
             val adjacentPositions = part.adjacentPositions()
 
             val adjacentChars = adjacentPositions.mapNotNull { (i, j) ->
-                try {
-                    input[i][j]
-                } catch (_: Exception) {
-                    null
-                }
+                val result = runCatching { input[i][j] }
+                result.getOrNull()
             }
             adjacentChars.any { it != '.' }
         }
