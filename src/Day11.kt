@@ -2,15 +2,7 @@ import kotlin.math.abs
 
 fun main() {
     fun part1(input: List<String>): Int {
-        val galaxies = buildList {
-            input.forEachIndexed { y, row ->
-                row.forEachIndexed { x, c ->
-                    if (c == '#') {
-                        add(Position2D(x, y))
-                    }
-                }
-            }
-        }
+        val galaxies = parseGalaxies(input)
         val emptyRows = galaxies.indices - galaxies.map { it.y }.toSet()
         val emptyColumns = galaxies.indices - galaxies.map { it.x }.toSet()
 
@@ -31,8 +23,26 @@ fun main() {
         }
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
+    fun part2(input: List<String>): Long {
+        val galaxies = parseGalaxies(input)
+        val emptyRows = galaxies.indices - galaxies.map { it.y }.toSet()
+        val emptyColumns = galaxies.indices - galaxies.map { it.x }.toSet()
+
+        val expandedGalaxies = mutableListOf<Position2D>()
+        for (galaxy in galaxies) {
+            val emptyColumnsBefore = (0..galaxy.x).count { it in emptyColumns }
+            val newX = galaxy.x + if (emptyColumnsBefore == 0) 0 else emptyColumnsBefore * 999_999
+
+            val emptyRowsBefore = (0..galaxy.y).count { it in emptyRows }
+            val newY = galaxy.y + if (emptyRowsBefore == 0) 0 else emptyRowsBefore * 999_999
+            expandedGalaxies += Position2D(newX, newY)
+        }
+
+        val galaxyPairs = expandedGalaxies.cartesianPairs()
+
+        return galaxyPairs.sumOf { (first, second) ->
+            first.manhattanDistance(second).toLong()
+        }
     }
 
     val input = readInput("input11")
@@ -41,6 +51,16 @@ fun main() {
 }
 
 data class Position2D(val x: Int, val y: Int)
+
+fun parseGalaxies(input: List<String>): List<Position2D> = buildList {
+    input.forEachIndexed { y, row ->
+        row.forEachIndexed { x, c ->
+            if (c == '#') {
+                add(Position2D(x, y))
+            }
+        }
+    }
+}
 
 fun Position2D.manhattanDistance(other: Position2D): Int = abs(x - other.x) + abs(y - other.y)
 
