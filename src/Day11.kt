@@ -6,14 +6,13 @@ fun main() {
         val emptyRows = galaxies.indices - galaxies.map { it.y }.toSet()
         val emptyColumns = galaxies.indices - galaxies.map { it.x }.toSet()
 
-        val expandedGalaxies = mutableListOf<Position2D>()
-        for (galaxy in galaxies) {
-            val emptyColumnsBefore = (0..galaxy.x).count { it in emptyColumns }
-            val newX = galaxy.x + if (emptyColumnsBefore == 0) 0 else emptyColumnsBefore
+        val expandedGalaxies = galaxies.map { (x, y) ->
+            val emptyColumnsBefore = (0..x).count { it in emptyColumns }
+            val newX = x + if (emptyColumnsBefore == 0) 0 else emptyColumnsBefore
 
-            val emptyRowsBefore = (0..galaxy.y).count { it in emptyRows }
-            val newY = galaxy.y + if (emptyRowsBefore == 0) 0 else emptyRowsBefore
-            expandedGalaxies += Position2D(newX, newY)
+            val emptyRowsBefore = (0..y).count { it in emptyRows }
+            val newY = y + if (emptyRowsBefore == 0) 0 else emptyRowsBefore
+            Position2D(newX, newY)
         }
 
         val galaxyPairs = expandedGalaxies.cartesianPairs()
@@ -28,14 +27,13 @@ fun main() {
         val emptyRows = galaxies.indices - galaxies.map { it.y }.toSet()
         val emptyColumns = galaxies.indices - galaxies.map { it.x }.toSet()
 
-        val expandedGalaxies = mutableListOf<Position2D>()
-        for (galaxy in galaxies) {
-            val emptyColumnsBefore = (0..galaxy.x).count { it in emptyColumns }
-            val newX = galaxy.x + if (emptyColumnsBefore == 0) 0 else emptyColumnsBefore * 999_999
+        val expandedGalaxies = galaxies.map { (x, y) ->
+            val emptyColumnsBefore = (0..x).count { it in emptyColumns }
+            val newX = x + if (emptyColumnsBefore == 0) 0 else emptyColumnsBefore * 999_999
 
-            val emptyRowsBefore = (0..galaxy.y).count { it in emptyRows }
-            val newY = galaxy.y + if (emptyRowsBefore == 0) 0 else emptyRowsBefore * 999_999
-            expandedGalaxies += Position2D(newX, newY)
+            val emptyRowsBefore = (0..y).count { it in emptyRows }
+            val newY = y + if (emptyRowsBefore == 0) 0 else emptyRowsBefore * 999_999
+            Position2D(newX, newY)
         }
 
         val galaxyPairs = expandedGalaxies.cartesianPairs()
